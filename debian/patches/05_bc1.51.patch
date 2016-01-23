@@ -1,0 +1,44 @@
+Description: patch for bouncycastle 1.51
+Forwarded: no
+Author: tony mancill <tmancill@debian.org>
+Reviewed-by: gregor herrmann <gregoa@debian.org>
+Last-Update: 2016-01-23
+
+--- a/pdfbox/src/main/java/org/apache/pdfbox/pdmodel/encryption/PublicKeySecurityHandler.java
++++ b/pdfbox/src/main/java/org/apache/pdfbox/pdmodel/encryption/PublicKeySecurityHandler.java
+@@ -27,6 +27,7 @@
+ import java.security.MessageDigest;
+ import java.security.NoSuchAlgorithmException;
+ import java.security.NoSuchProviderException;
++import java.security.PrivateKey;
+ import java.security.SecureRandom;
+ import java.security.cert.X509Certificate;
+ import java.util.Iterator;
+@@ -56,6 +57,7 @@
+ import org.bouncycastle.cms.CMSEnvelopedData;
+ import org.bouncycastle.cms.CMSException;
+ import org.bouncycastle.cms.RecipientInformation;
++import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+ import org.apache.pdfbox.cos.COSArray;
+ import org.apache.pdfbox.cos.COSString;
+ import org.apache.pdfbox.exceptions.CryptographyException;
+@@ -185,7 +187,7 @@
+                     if (ri.getRID().match(material.getCertificate()) && !foundRecipient)
+                     {
+                         foundRecipient = true;
+-                        envelopedData = ri.getContent(material.getPrivateKey(), "BC");
++                        envelopedData = ri.getContent(new JceKeyTransEnvelopedRecipient((PrivateKey) material.getPrivateKey()).setProvider("BC"));
+                         break;
+                     }
+                 }
+@@ -239,10 +241,6 @@
+         {
+             throw new CryptographyException(e);
+         }
+-        catch (NoSuchProviderException e)
+-        {
+-            throw new CryptographyException(e);
+-        }
+         catch (NoSuchAlgorithmException e)
+         {
+             throw new CryptographyException(e);

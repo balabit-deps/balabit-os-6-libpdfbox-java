@@ -1,0 +1,96 @@
+Source: libpdfbox-java
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: tony mancill <tmancill@debian.org>,
+           gregor herrmann <gregoa@debian.org>,
+           Emmanuel Bourg <ebourg@apache.org>
+Build-Depends: ant,
+               debhelper (>= 9)
+Build-Depends-Indep: ant-optional,
+                     checkstyle,
+                     default-jdk,
+                     htmldoc-common,
+                     javahelper,
+                     junit4,
+                     lcdf-typetools,
+                     libbcmail-java (>= 1.47),
+                     libbcpkix-java (>= 1.47),
+                     libbcprov-java (>= 1.47),
+                     libcommons-beanutils-java,
+                     libcommons-logging-java,
+                     libicu4j-java,
+                     maven-repo-helper,
+                     poppler-data
+Standards-Version: 3.9.6
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-java/libpdfbox-java.git
+Vcs-Git: git://anonscm.debian.org/pkg-java/libpdfbox-java.git
+Homepage: http://pdfbox.apache.org
+
+Package: libpdfbox-java
+Architecture: all
+Depends: ${misc:Depends},
+         libfontbox-java
+Breaks: jabref (<< 2.7~beta1+ds-4)
+Built-Using: ${misc:Built-Using}
+Description: PDF library for Java
+ The Apache PDFBox library is an open source Java tool for working with PDF
+ documents. This project allows creation of new PDF documents, manipulation
+ of existing documents and the ability to extract content from documents.
+ .
+ This package contains the library itself.
+
+Package: libpdfbox-java-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Suggests: libpdfbox-java (= ${source:Version})
+Description: PDF library for Java (documentation)
+ The Apache PDFBox library is an open source Java tool for working with PDF
+ documents. This project allows creation of new PDF documents, manipulation
+ of existing documents and the ability to extract content from documents.
+ .
+ This package contains the documentation for the library.
+
+Package: libjempbox-java
+Architecture: all
+Depends: ${misc:Depends}
+Breaks: jabref (<< 2.7~beta1+ds-4)
+Description: XMP Compatible Java Library
+ The Apache JempBox library is an open source Java tool for working with  XMP
+ metadata.
+ .
+ This package contains the library itself.
+
+Package: libjempbox-java-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Suggests: libjempbox-java (= ${source:Version}) 
+Description: XMP Compatible Java Library (documentation)
+ The Apache JempBox library is an open source Java tool for working with  XMP
+ metadata.
+ .
+ This package contains the documentation for the library.
+
+Package: libfontbox-java
+Architecture: all
+Depends: ${misc:Depends}
+Description: Java font library
+ The Apache FontBox library is an open source Java tool to obtain low level
+ information from font files.
+ .
+ This package contains the library itself.
+
+Package: libfontbox-java-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Suggests: libfontbox-java (= ${source:Version}) 
+Breaks: libfontbox-java (<< 1:1.5.0)
+Replaces: libfontbox-java (<< 1:1.5.0)
+Description: Java font library (Documentation)
+ The Apache FontBox library is an open source Java tool to obtain low level
+ information from font files.
+ .
+ This package contains the documentation for the library.

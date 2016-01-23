@@ -1,0 +1,5 @@
+build.xml.patch
+build-subproject-docs.patch
+bc-1.47.patch
+reproducible-build.patch
+05_bc1.51.patch

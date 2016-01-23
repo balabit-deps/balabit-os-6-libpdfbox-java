@@ -1,0 +1,40 @@
+Description: Make the build reproducible
+Author: Emmanuel Bourg <ebourg@apache.org>
+Forwarded: not-needed
+--- a/pdfbox/build.xml
++++ b/pdfbox/build.xml
+@@ -393,9 +393,7 @@
+     </target>
+ 
+     <target name="pdfbox.package" depends="get.externallibs.pdfbox,pdfbox.compile" description="Package pdfbox into a jar file">
+-        <propertyfile file="${pdfbox.resources.dir}/org/apache/pdfbox/resources/pdfbox.version">
+-            <entry  key="pdfbox.version" value="${pdfbox.release.name}"/>
+-        </propertyfile>
++        <echo file="${pdfbox.resources.dir}/org/apache/pdfbox/resources/pdfbox.version">pdfbox.version=${pdfbox.release.name}</echo>
+ 
+         <jar jarfile="./${pdfbox.target.dir}/${pdfbox.release.name}.jar">
+             <fileset dir="${pdfbox.dest.dir}"/>
+@@ -852,6 +850,7 @@
+                verbose="no"
+                classpathref="pdfbox.build.classpath"
+                encoding="ISO-8859-1"
++               locale="en"
+                breakiterator="yes">
+             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+         </javadoc>
+@@ -876,6 +875,7 @@
+                verbose="no"
+                classpathref="fontbox.build.classpath"
+                encoding="ISO-8859-1"
++               locale="en"
+                breakiterator="yes">
+             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+         </javadoc>
+@@ -900,6 +900,7 @@
+                verbose="no"
+                classpathref="jempbox.build.classpath"
+                encoding="ISO-8859-1"
++               locale="en"
+                breakiterator="yes">
+             <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+         </javadoc>

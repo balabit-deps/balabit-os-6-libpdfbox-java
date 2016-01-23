@@ -1,0 +1,56 @@
+#!/usr/bin/make -f
+#
+# debian/rules
+# 20100806/tm	convert to javahelper
+
+export JAVA_HOME=/usr/lib/jvm/default-java
+export CLASSPATH=/usr/share/java/bcmail.jar:/usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/checkstyle.jar:/usr/share/java/junit4.jar:/usr/share/java/commons-logging.jar:/usr/share/java/icu4j.jar:/usr/share/java/commons-beanutils.jar
+
+htmldoc-common_source := $(shell dpkg-query -f '$${source:Package} (= $${source:Version}), ' -W htmldoc-common)
+lcdf-typetools_source := $(shell dpkg-query -f '$${source:Package} (= $${source:Version}), ' -W lcdf-typetools)
+poppler-data_source   := $(shell dpkg-query -f '$${source:Package} (= $${source:Version}), ' -W poppler-data)
+
+%:
+	dh $@ --buildsystem ant
+
+override_dh_auto_clean:
+	dh_auto_clean -- -buildfile pdfbox/build.xml
+	rm -Rf pdfbox/src/main/resources/org/apache/pdfbox/resources/pdfbox.version
+	mh_clean
+
+override_dh_auto_configure:
+	# replace what we delete in repacking. never used ...
+	mkdir -p pdfbox/src/main/resources/org/apache/pdfbox/resources/cmap/
+	find /usr/share/poppler/cMap -type f -print0 | xargs -r0 cp -n -t pdfbox/src/main/resources/org/apache/pdfbox/resources/cmap/
+	dh_auto_configure
+
+override_dh_auto_build:
+	# work around downloading adobe file
+	mkdir -p pdfbox/target/classes/org/apache/pdfbox/resources/cmap
+	cp pdfbox/src/main/resources/org/apache/pdfbox/resources/cmap/* pdfbox/target/classes/org/apache/pdfbox/resources/cmap/
+	mkdir -p pdfbox/target/classes/org/apache/pdfbox/resources/afm
+	cp /usr/share/htmldoc/fonts/*.afm pdfbox/target/classes/org/apache/pdfbox/resources/afm/
+	cp /usr/share/lcdf-typetools/glyphlist.txt pdfbox/target/classes/org/apache/pdfbox/resources
+
+	dh_auto_build -- -buildfile pdfbox/build.xml pdfbox.package fontbox.package jempbox.package pdfbox.javadoc fontbox.javadoc jempbox.javadoc
+
+override_dh_link:
+	mh_install -plibpdfbox-java
+	mh_install -plibjempbox-java
+	mh_install -plibfontbox-java
+
+	jh_classpath
+
+override_dh_installchangelogs:
+	dh_installchangelogs $(CURDIR)/RELEASE-NOTES.txt
+
+override_dh_installexamples:
+	dh_installexamples
+	# empty directory since we remove the contents during repackaging.
+	rmdir --verbose --parents --ignore-fail-on-non-empty $(CURDIR)/debian/libpdfbox-java-doc/usr/share/doc/libpdfbox-java-doc/examples/src/main/resources/org/apache/pdfbox/resources/pdfa
+
+override_dh_gencontrol:
+	dh_gencontrol -- "-Vmisc:Built-Using=$(htmldoc-common_source)$(lcdf-typetools_source)$(poppler-data_source)"
+
+get-orig-source:
+	uscan --force-download --repack --rename

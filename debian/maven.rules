@@ -1,0 +1,2 @@
+
+commons-logging s/commons-logging-api/commons-logging/ * s/.*/debian/ * *

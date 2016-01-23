@@ -1,0 +1,94 @@
+Description: adjust for Debian:
+ - use Debian packages for building
+ - remove the test classes from the jars
+ - fix a variable
+Origin: vendor
+Forwarded: not-needed
+Author: gregor herrmann <gregoa@debian.org>
+Last-Update: 2016-01-23
+
+--- a/pdfbox/build.xml
++++ b/pdfbox/build.xml
+@@ -24,8 +24,8 @@
+     <property name="build.compiler" value="modern" />
+ 
+     <property name="download.dir" value="download" />
+-    <property name="jar.dir" value="external" />
+-    <property name="tool.dir" value="tools" />
++    <property name="jar.dir" value="/usr/share/java" />
++    <property name="tool.dir" value="/usr/share/java" />
+     <property name="bin.dir" value="bin" />
+ 
+     <property name="project.version" value="1.8.11" />
+@@ -64,23 +64,23 @@
+     <property name="maven.repo1" value="http://repo1.maven.org/maven2" />
+     <property name="maven.repo2" value="http://repo2.maven.org/maven2" />
+ 
+-    <property name="bcprov.name" value="bcprov-jdk15-1.44" />
++    <property name="bcprov.name" value="bcprov" />
+     <property name="bcprov.url" value="${maven.repo2}/org/bouncycastle/bcprov-jdk15/1.44/${bcprov.name}.jar" />
+     <property name="bcprov.jar" value="${jar.dir}/${bcprov.name}.jar" />
+ 
+-    <property name="bcmail.name" value="bcmail-jdk15-1.44" />
++    <property name="bcmail.name" value="bcmail" />
+     <property name="bcmail.url" value="${maven.repo2}/org/bouncycastle/bcmail-jdk15/1.44/${bcmail.name}.jar" />
+     <property name="bcmail.jar" value="${jar.dir}/${bcmail.name}.jar" />
+ 
+-    <property name="junit.name" value="junit-4.8.1" />
++    <property name="junit.name" value="junit4" />
+     <property name="junit.url" value="${maven.repo2}/junit/junit/4.8.1/${junit.name}.jar" />
+     <property name="junit.jar" value="${jar.dir}/${junit.name}.jar" />
+ 
+-    <property name="logging.name" value="commons-logging-1.1.1" />
++    <property name="logging.name" value="commons-logging" />
+     <property name="logging.url" value="${maven.repo1}/commons-logging/commons-logging/1.1.1/${logging.name}.jar" />
+     <property name="logging.jar" value="${jar.dir}/${logging.name}.jar" />
+ 
+-    <property name="icu4j.name" value="icu4j-3.8" />
++    <property name="icu4j.name" value="icu4j" />
+     <property name="icu4j.url" value="${maven.repo1}/com/ibm/icu/icu4j/3.8/${icu4j.name}.jar" />
+     <property name="icu4j.jar" value="${jar.dir}/${icu4j.name}.jar" />
+ 
+@@ -177,9 +177,11 @@
+         <javac srcdir="${pdfbox.src.dir}" destdir="${pdfbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="pdfbox.build.classpath" encoding="ISO-8859-1"/>
++<!--
+         <javac srcdir="${pdfbox.test.dir}" destdir="${pdfbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="pdfbox.build.classpath" encoding="ISO-8859-1"/>
++-->
+     </target>
+ 
+     <target name="fontbox.compile" depends="fontbox.init"
+@@ -188,9 +190,11 @@
+         <javac srcdir="${fontbox.src.dir}" destdir="${fontbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="fontbox.build.classpath" encoding="ISO-8859-1"/>
++<!--
+         <javac srcdir="${fontbox.test.dir}" destdir="${fontbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="fontbox.build.classpath" encoding="ISO-8859-1"/>
++-->
+     </target>
+ 
+     <target name="jempbox.compile" depends="jempbox.init"
+@@ -199,15 +203,17 @@
+         <javac srcdir="${jempbox.src.dir}" destdir="${jempbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="jempbox.build.classpath" encoding="ISO-8859-1"/>
++<!--
+         <javac srcdir="${jempbox.test.dir}" destdir="${jempbox.dest.dir}"
+                target="1.5" source="1.5" debug="on" deprecation="on"
+                classpathref="jempbox.build.classpath" encoding="ISO-8859-1"/>
++-->
+     </target>
+ 
+     <target name="test" depends="testextract,test-junit,testimage" description="Run all the junit tests"/>
+ 
+     <target name="find.adobefiles">
+-        <available property="adobefiles.found" file="${dest.dir}/org/apache/pdfbox/resources/cmap"/>
++        <available property="adobefiles.found" file="${pdfbox.dest.dir}/org/apache/pdfbox/resources/cmap"/>
+     </target>
+ 
+     <target name="get.adobefiles"
