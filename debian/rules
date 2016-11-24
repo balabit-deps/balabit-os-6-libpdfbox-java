@@ -47,7 +47,7 @@ override_dh_installchangelogs:
 override_dh_installexamples:
 	dh_installexamples
 	# empty directory since we remove the contents during repackaging.
-	rmdir --verbose --parents --ignore-fail-on-non-empty $(CURDIR)/debian/libpdfbox-java-doc/usr/share/doc/libpdfbox-java-doc/examples/src/main/resources/org/apache/pdfbox/resources/pdfa
+	rm -rf $(CURDIR)/debian/libpdfbox-java-doc/usr/share/doc/libpdfbox-java-doc/examples/src/main/resources/org/apache/pdfbox/resources/pdfa
 
 override_dh_gencontrol:
 	dh_gencontrol -- "-Vmisc:Built-Using=$(htmldoc-common_source)$(lcdf-typetools_source)$(poppler-data_source)"
